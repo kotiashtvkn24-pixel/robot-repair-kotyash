@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Template name="NPCDialogue" src="NPCDialogue.uxml" />
+    <ui:Template name="EndScreen" src="EndScreen.uxml" />
+    <ui:VisualElement name="HealthBarBackground" style="flex-grow: 0; width: 520px; height: 239px; margin-top: 20px; margin-left: 20px; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/SugarLand/UI/UIHealthFrame.png?fileID=21300000&amp;guid=587ae468f8de9ec419f7f86c5433bcbf&amp;type=3#UIHealthFrame&quot;); -unity-background-scale-mode: scale-to-fit;">
+        <ui:VisualElement name="HealthBarContainer" style="position: absolute; left: 43%; top: 33%; width: 53%; height: 31%;">
+            <ui:VisualElement name="HealthBar" style="width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/SugarLand/UI/UIHealthBar.png?fileID=21300000&amp;guid=b28ee55f43291f14ab9219808f397b88&amp;type=3#UIHealthBar&quot;);" />
+        </ui:VisualElement>
+        <ui:VisualElement name="CharacterPortrait" style="position: absolute; left: 5%; top: 9%; width: 35%; height: 82%; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/SugarLand/UI/CharacterPortrait.png?fileID=21300000&amp;guid=e8af26c6841fc05459ccaf23dbab2b63&amp;type=3#CharacterPortrait&quot;); -unity-background-scale-mode: scale-to-fit;" />
+    </ui:VisualElement>
+    <ui:Instance template="NPCDialogue" name="NPCDialogue" style="position: absolute; top: 70%; right: 10%; bottom: 0; left: 10%;" />
+    <ui:Instance template="EndScreen" name="EndScreen" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;" />
+</ui:UXML>

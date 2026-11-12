@@ -220,6 +220,24 @@ MonoBehaviour:
       m_Flags: 0
     m_Flags: 0
     m_Priority: 0
+  TalkAction:
+    m_Name: Talk Action
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: b1768a22-72ec-47bf-b31d-1e223926e9da
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 720b93b3-e521-475b-9962-646ee9c25fcd
+      m_Path: <Keyboard>/x
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Talk Action
+      m_Flags: 0
+    m_Flags: 0
+    m_Priority: 0
 --- !u!50 &7446026972345362319
 Rigidbody2D:
   serializedVersion: 5
