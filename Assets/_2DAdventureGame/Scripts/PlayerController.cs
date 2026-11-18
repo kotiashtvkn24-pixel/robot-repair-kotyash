@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     bool isInvincible;
     float damageCooldown;
 
+    [SerializeField] AudioClip hitSound;
+    [SerializeField] AudioClip healSound;
+
     Animator animator;
     Vector2 moveDirection = new Vector2(1, 0);
 
@@ -25,14 +28,38 @@ public class PlayerController : MonoBehaviour
     public InputAction TalkAction;
     private NonPlayerCharacter lastNonPlayerCharacter;
 
-    void Start()
+    void Awake()
     {
-        MoveAction.Enable();
-        LaunchAction.Enable();
-        TalkAction.Enable();
         rigidbody2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         currentHealth = maxHealth;
+    }
+
+    void OnEnable()
+    {
+        SetInputEnabled(true);
+    }
+
+    void OnDisable()
+    {
+        SetInputEnabled(false);
+    }
+
+    public void SetInputEnabled(bool active)
+    {
+        if (active)
+        {
+            MoveAction.Enable();
+            LaunchAction.Enable();
+            TalkAction.Enable();
+        }
+        else
+        {
+            MoveAction.Disable();
+            LaunchAction.Disable();
+            TalkAction.Disable();
+            move = Vector2.zero;
+        }
     }
 
     void Update()
@@ -90,21 +117,35 @@ public class PlayerController : MonoBehaviour
         rigidbody2d.MovePosition(position);
     }
 
-    public void ChangeHealth(int amount)
+    public bool ChangeHealth(int amount)
     {
+        if (currentHealth == 0 || (amount < 0 && isInvincible))
+        {
+            return false;
+        }
+
+        int nextHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        if (nextHealth == currentHealth)
+        {
+            return false;
+        }
+
         if (amount < 0)
         {
-            if (isInvincible)
-            {
-                return;
-            }
             isInvincible = true;
             damageCooldown = timeInvincible;
             animator.SetTrigger("Hit");
         }
 
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        UIHandler.instance.SetHealthValue(currentHealth / (float)maxHealth);
+        currentHealth = nextHealth;
+        UIHandler.instance.SetHealthValue(currentHealth, maxHealth, amount < 0);
+        AudioClip clip = amount < 0 ? hitSound : healSound;
+        if (clip != null)
+        {
+            AudioSource.PlayClipAtPoint(clip, transform.position);
+        }
+
+        return true;
     }
 
     void Launch()

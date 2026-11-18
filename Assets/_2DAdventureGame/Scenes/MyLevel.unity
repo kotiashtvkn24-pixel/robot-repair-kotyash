@@ -364,6 +364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   player: {fileID: 1987901253}
   uiHandler: {fileID: 1861323858}
+  showStartScreen: 1
 --- !u!4 &730245290
 Transform:
   m_ObjectHideFlags: 0

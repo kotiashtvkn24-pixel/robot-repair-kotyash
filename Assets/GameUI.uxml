@@ -7,6 +7,10 @@
         </ui:VisualElement>
         <ui:VisualElement name="CharacterPortrait" style="position: absolute; left: 5%; top: 9%; width: 35%; height: 82%; background-image: url(&quot;project://database/Assets/_2DAdventureGame/Art/SugarLand/UI/CharacterPortrait.png?fileID=21300000&amp;guid=e8af26c6841fc05459ccaf23dbab2b63&amp;type=3#CharacterPortrait&quot;); -unity-background-scale-mode: scale-to-fit;" />
     </ui:VisualElement>
+    <ui:VisualElement name="Status" picking-mode="Ignore" style="position: absolute; top: 24px; right: 24px; padding: 12px 24px; background-color: rgb(32, 23, 45); border-radius: 12px;">
+        <ui:Label name="HealthValue" text="5 / 5" style="font-size: 40px; -unity-font-style: bold; -unity-text-align: middle-center;" />
+        <ui:Label name="RepairCount" style="color: rgb(255, 248, 237); font-size: 30px; -unity-text-align: middle-center;" />
+    </ui:VisualElement>
     <ui:Instance template="NPCDialogue" name="NPCDialogue" style="position: absolute; top: 70%; right: 10%; bottom: 0; left: 10%;" />
     <ui:Instance template="EndScreen" name="EndScreen" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;" />
 </ui:UXML>

@@ -200,6 +200,8 @@ MonoBehaviour:
   speed: 3
   maxHealth: 5
   timeInvincible: 2
+  hitSound: {fileID: 8300000, guid: c7d3a91ac32abbe47a8931a8ffc37bc6, type: 3}
+  healSound: {fileID: 8300000, guid: 173a14cf06354c643b46b235f2a4f974, type: 3}
   projectilePrefab: {fileID: 3059899599868960574, guid: 8f165aeca5dbd9143b7ef18fee848751,
     type: 3}
   LaunchAction:

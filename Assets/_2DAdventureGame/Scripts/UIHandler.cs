@@ -1,68 +1,91 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class UIHandler : MonoBehaviour
 {
     public static UIHandler instance { get; private set; }
+    public float displayTime = 4f;
 
-    public float displayTime = 4.0f;
-    private VisualElement m_NonPlayerDialogue;
-    private float m_TimerDisplay;
+    VisualElement healthBar;
+    Label healthValue;
+    Label repairCount;
+    VisualElement dialogue;
+    VisualElement startScreen;
+    VisualElement winScreen;
+    VisualElement loseScreen;
+    float dialogueRemaining;
+    IVisualElementScheduledItem resetHealthTint;
 
-    private VisualElement m_Healthbar;
+    static readonly Color FullHealthColor = new Color32(255, 215, 157, 255);
+    static readonly Color DamageColor = new Color32(255, 125, 138, 255);
+    static readonly Color HealColor = new Color32(164, 250, 193, 255);
 
-    private VisualElement m_WinScreen;
-    private VisualElement m_LoseScreen;
-
-    private void Awake()
+    void Awake()
     {
         instance = this;
     }
 
-    void Start()
+    public void ConfigureScreens(Action start, Action restart)
     {
-        UIDocument uiDocument = GetComponent<UIDocument>();
-        m_Healthbar = uiDocument.rootVisualElement.Q<VisualElement>("HealthBar");
-        SetHealthValue(1.0f);
+        var root = GetComponent<UIDocument>().rootVisualElement;
+        healthBar = root.Q("HealthBar");
+        healthValue = root.Q<Label>("HealthValue");
+        repairCount = root.Q<Label>("RepairCount");
+        dialogue = root.Q("NPCDialogue");
+        startScreen = root.Q("StartScreenContainer");
+        winScreen = root.Q("WinScreenContainer");
+        loseScreen = root.Q("LoseScreenContainer");
 
-        m_NonPlayerDialogue = uiDocument.rootVisualElement.Q<VisualElement>("NPCDialogue");
-        m_NonPlayerDialogue.style.display = DisplayStyle.None;
-        m_TimerDisplay = -1.0f;
-
-        m_LoseScreen = uiDocument.rootVisualElement.Q<VisualElement>("LoseScreenContainer");
-        m_WinScreen = uiDocument.rootVisualElement.Q<VisualElement>("WinScreenContainer");
+        dialogue.style.display = DisplayStyle.None;
+        root.Q<Button>("StartScreenContainerButton").clicked += start;
+        root.Q<Button>("WinScreenContainerButton").clicked += restart;
+        root.Q<Button>("LoseScreenContainerButton").clicked += restart;
     }
 
-    public void SetHealthValue(float percentage)
+    public void SetHealthValue(int current, int maximum, bool? tookDamage = null)
     {
-        m_Healthbar.style.width = Length.Percent(100 * percentage);
-    }
-
-    private void Update()
-    {
-        if (m_TimerDisplay > 0)
+        healthValue.text = $"{current} / {maximum}";
+        healthBar.style.width = Length.Percent(100f * current / maximum);
+        resetHealthTint?.Pause();
+        healthValue.style.color = tookDamage.HasValue
+            ? (tookDamage.Value ? DamageColor : HealColor)
+            : FullHealthColor;
+        if (tookDamage.HasValue)
         {
-            m_TimerDisplay -= Time.deltaTime;
-            if (m_TimerDisplay < 0)
-            {
-                m_NonPlayerDialogue.style.display = DisplayStyle.None;
-            }
+            resetHealthTint = healthValue.schedule.Execute(
+                () => healthValue.style.color = FullHealthColor).StartingIn(450);
         }
+    }
+
+    public void SetRepairCount(int repaired, int total)
+    {
+        repairCount.text = $"Автомати {repaired} / {total}";
+    }
+
+    void Update()
+    {
+        if (dialogueRemaining <= 0f) return;
+
+        dialogueRemaining -= Time.deltaTime;
+        if (dialogueRemaining <= 0f) dialogue.style.display = DisplayStyle.None;
     }
 
     public void DisplayDialogue()
     {
-        m_NonPlayerDialogue.style.display = DisplayStyle.Flex;
-        m_TimerDisplay = displayTime;
+        dialogue.style.display = DisplayStyle.Flex;
+        dialogueRemaining = displayTime;
     }
 
-    public void DisplayWinScreen()
+    public void DisplayStartScreen(bool visible)
     {
-        m_WinScreen.style.opacity = 1.0f;
+        startScreen.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
-    public void DisplayLoseScreen()
+    public void DisplayResult(bool won)
     {
-        m_LoseScreen.style.opacity = 1.0f;
+        dialogue.style.display = DisplayStyle.None;
+        VisualElement result = won ? winScreen : loseScreen;
+        result.style.display = DisplayStyle.Flex;
     }
 }
