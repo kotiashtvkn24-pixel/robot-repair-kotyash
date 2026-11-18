@@ -8,6 +8,8 @@ public class EnemyController : MonoBehaviour
     public bool vertical;
     public float changeTime = 3.0f;
 
+    [SerializeField] AudioClip fixSound;
+
     Rigidbody2D rigidbody2d;
     Animator animator;
     float timer;
@@ -61,7 +63,7 @@ public class EnemyController : MonoBehaviour
     {
         PlayerController player = other.gameObject.GetComponent<PlayerController>();
 
-        if (player != null)
+        if (broken && player != null)
         {
             player.ChangeHealth(-1);
         }
@@ -69,8 +71,17 @@ public class EnemyController : MonoBehaviour
 
     public void Fix()
     {
+        if (!broken)
+        {
+            return;
+        }
+
         broken = false;
         rigidbody2d.simulated = false;
         animator.SetTrigger("Fixed");
+        if (fixSound != null)
+        {
+            AudioSource.PlayClipAtPoint(fixSound, transform.position);
+        }
     }
 }
